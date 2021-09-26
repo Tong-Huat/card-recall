@@ -1,3 +1,46 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
 body {
-  background-color: pink;
+  margin: 0 auto;
+  background-color: aliceblue;
+}
+
+h1 {
+  text-align: center;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 10px;
+  margin: 5vh auto;
+  color: #212121;
+  border: 4px solid #ff993b;
+  border-radius: 25px;
+  text-align: center;
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-top: 4px;
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }

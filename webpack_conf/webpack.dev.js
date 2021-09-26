@@ -1,12 +1,14 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const path = require('path');
 const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
+const path = require('path');
+
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = merge(common, {
-  entry: {
-    main: './src/index.js',
-  },
+  // entry: {
+  //   main: './src/index.js',
+  // },
   mode: 'development',
   devtool: 'inline-source-map',
   watch: true,
@@ -30,6 +32,5 @@ module.exports = merge(common, {
       filename: './main.html',
       template: path.resolve(__dirname, '..', 'src', 'main.html'),
     }),
-
   ].filter(Boolean),
 });
