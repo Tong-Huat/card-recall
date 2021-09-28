@@ -47,44 +47,56 @@ const makeDeck = function () {
   const deck = [];
 
   const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
-
-  let suitIndex = 0;
-  while (suitIndex < suits.length) {
-    // make a variable of the current suit
+  const symbols = ['❤️', '♦️', '♣', '♠'];
+ 
+  // Loop over the suits array
+  for (let suitIndex = 0; suitIndex < suits.length; suitIndex += 1) {
+    // Store the current suit in a variable
     const currentSuit = suits[suitIndex];
-
-    // loop to create all cards in this suit
-    // rank 1-13
-    let rankCounter = 1;
-    while (rankCounter <= 13) {
-      let cardName = rankCounter;
-
-      // 1, 11, 12 ,13
-      if (cardName === 1) {
+    const currentSymbol = symbols[suitIndex];
+    // Loop from 1 to 13 to create all cards for a given suit
+    for (let rankCounter = 1; rankCounter <= 13; rankCounter += 1) {
+      // By default, the card name is the same as rankCounter
+      let cardName = `${rankCounter}`;
+      let cardDisplay = `${rankCounter}`;
+      let cardColor = 'red';
+      // If rank is 1, 11, 12, or 13, set cardName to the ace or face card's name
+      if (cardName === '1') {
         cardName = 'ace';
-      } else if (cardName === 11) {
+        cardDisplay = 'A';
+      } else if (cardName === '11') {
         cardName = 'jack';
-      } else if (cardName === 12) {
+        cardDisplay = 'J';
+      } else if (cardName === '12') {
         cardName = 'queen';
-      } else if (cardName === 13) {
+        cardDisplay = 'Q';
+      } else if (cardName === '13') {
         cardName = 'king';
+        cardDisplay = 'K';
       }
 
-      // make a single card object variable
+      if (currentSuit === 'hearts' || currentSuit === 'diamonds') {
+        cardColor = 'red';
+      } else if (currentSuit === 'spades' || currentSuit === 'clubs') {
+        cardColor = 'black';
+      }
+
+      // Create a new card with the current name, suit, and rank
       const card = {
         name: cardName,
         suit: currentSuit,
         rank: rankCounter,
+        suitSymbol: currentSymbol,
+        displayName: cardDisplay,
+        color: cardColor,
       };
 
-      // add the card to the deck
+      // Add the new card to the deck
       deck.push(card);
-
-      rankCounter += 1;
     }
-    suitIndex += 1;
   }
 
+  // Return the completed card deck
   return deck;
 };
 
@@ -102,71 +114,37 @@ const makeDeck = function () {
  */
 
 export default function initGamesController(db) {
-  // render the main page
-  // const index = (request, response) => {
-  //   response.render('games/index');
-  // };
-  let player1Hand;
-  let player2Hand;
-  let result;
-  let player1Score = 0;
-  let player2Score = 0;
-
-  const determineWinner = () => {
-    if (player1Hand.rank === player2Hand.rank) {
-      result = 'Its a DRAW!';
-    } else if (player1Hand.rank > player2Hand.rank) {
-      result = 'Player 1 Won!';
-      player1Score += 1;
-    } else {
-      result = 'Player 2 Won!';
-      player2Score += 1;
-    }
-    return result;
-  };
   // create a new game. Insert a new row in the DB.
   const create = async (request, response) => {
+    // cardContainer.innerHTML = '';
+    let flashCards = []; 
+    let flashCard;
     // deal out a new shuffled deck for this game.
     const cardDeck = shuffleCards(makeDeck());
-    player1Hand = cardDeck.pop();
-    player2Hand = cardDeck.pop();
-    console.log('player1Hand :>> ', player1Hand);
-    console.log('player1Hand.rank :>> ', player1Hand.rank);
-    console.log('player2Hand :>> ', player2Hand);
-    console.log('player2Hand.rank :>> ', player2Hand.rank);
-    determineWinner();
-    const newGame = {
+    for (let i = 1; i < 6; i += 1) {
+    // Pop player's card metadata from the deck
+    flashCard = cardDeck.pop();
+    flashCards.push(flashCard);
+  }
+    
+    const gameInfo = {
       gameState: {
-        cardDeck,
-        player1Hand,
-        player2Hand,
-        player1Score,
-        player2Score,
-        result,
+        flashCards,
       },
+      created_by: request.cookies.userId,
     };
 
     try {
       // run the DB INSERT query
-      const createNewGame = await db.Game.create(newGame);
+      const newGame = await db.Game.create(gameInfo);
 
-      // console.log('userCount :>> ', userCount);
-      const player1 = await db.User.findOne({
-        where: {
-          id: request.cookies.userId,
-        },
-      });
-      console.log('player1 id :>> ', player1);
       // send the new game back to the user.
       // dont include the deck so the user can't cheat
       response.send({
-        id: createNewGame.id,
-        player1Hand: createNewGame.gameState.player1Hand,
-        player2Hand: createNewGame.gameState.player2Hand,
-        player1Score: createNewGame.gameState.player1Score,
-        player2Score: createNewGame.gameState.player2Score,
-        result: createNewGame.gameState.result,
+        id: newGame.id,
+        flashCards: newGame.gameState.flashCards,
       });
+     
     } catch (error) {
       response.status(500).send(error);
     }

@@ -60,6 +60,8 @@ loginContainer.appendChild(passwordDiv);
 loginContainer.appendChild(loginBtn);
 document.body.appendChild(loginContainer);
 
+// global value that holds info about the current hand.
+let currentGame = null;
 // create game btn
 const createGameBtn = document.createElement('button');
 
@@ -100,11 +102,64 @@ loginBtn.addEventListener('click', () => {
       }
     });
 });
+// ************** create card  elements **************//
+const flashedCards = document.createElement('h5');
+
+const cardContainer = document.createElement('div');
+cardContainer.classList.add('container', 'form-signin', 'bg-light', 'cardContainer');
+
+cardContainer.appendChild(flashedCards)
+// create card function
+const createCard = (cardInfo) => {
+  const suit = document.createElement('div');
+  suit.classList.add('suit');
+  suit.innerText = cardInfo.suitSymbol;
+
+  const name = document.createElement('div');
+  name.classList.add('name', cardInfo.color);
+  name.innerText = cardInfo.displayName;
+
+  const card = document.createElement('div');
+  card.classList.add('card', 'highlight');
+ 
+  card.appendChild(name);
+  card.appendChild(suit);
+
+  return card;
+};
+
+const runGame = function ({ flashCards,
+}) {
+  let cardElement;
+  // manipulate DOM
+  const gameContainer = document.querySelector('#game-container');
+  for (let i = 0; i < flashCards.length; i += 1){
+    cardElement = createCard(flashCards[i]);
+    cardElement.id = `card${i}`;
+    flashedCards.appendChild(cardElement)
+  }
+    
+ 
+  console.log('flashCards :>> ', flashCards);
+  gameContainer.appendChild(cardContainer);
+};
 
 const createGame = function () {
   document.body.removeChild(createGameBtn);
   // Make a request to create a new game
-  
+  axios
+    .post('/games')
+    .then((response) => {
+    // set the global value to the new game.
+      currentGame = response.data;
+      console.log(currentGame);
+      // display it out to the user
+      runGame(currentGame);
+    })
+    .catch((error) => {
+      // handle error
+      console.log(error);
+    });
 };
 
 // manipulate DOM, set up create game button

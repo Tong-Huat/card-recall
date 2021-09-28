@@ -44,3 +44,35 @@ h1 {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+/* for card display */
+.card {
+  margin: 48px 24px 20px 24px;
+  padding: 8px;
+  background-color: white;
+  height: 90px;
+  width: 60px;
+  border-radius: 8px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.suit {
+  margin: 5px;
+  font-size: 18px;
+}
+
+.name {
+  margin: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
+.red {
+  color: red;
+}
+
+.black {
+  color: black;
+}
