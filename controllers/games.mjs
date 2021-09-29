@@ -121,15 +121,16 @@ export default function initGamesController(db) {
     let flashCard;
     // deal out a new shuffled deck for this game.
     const cardDeck = shuffleCards(makeDeck());
-    for (let i = 1; i < 6; i += 1) {
+    for (let i = 0; i < 10; i += 1) {
     // Pop player's card metadata from the deck
     flashCard = cardDeck.pop();
     flashCards.push(flashCard);
   }
-    
+
     const gameInfo = {
       gameState: {
         flashCards,
+     
       },
       created_by: request.cookies.userId,
     };

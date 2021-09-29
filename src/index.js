@@ -1,7 +1,9 @@
 import './styles.scss';
 import axios from 'axios';
-
-
+// global value that holds info about the current hand.
+let currentGame = null;
+let displayedCards = []
+let selectedCards = []
 // create registrations on landing page
 const registrationContainer = document.createElement('div');
 registrationContainer.classList.add('container', 'form-signin', 'bg-light');
@@ -60,10 +62,10 @@ loginContainer.appendChild(passwordDiv);
 loginContainer.appendChild(loginBtn);
 document.body.appendChild(loginContainer);
 
-// global value that holds info about the current hand.
-let currentGame = null;
+
 // create game btn
 const createGameBtn = document.createElement('button');
+createGameBtn.innerText = 'Create Game';
 
 registrationBtn.addEventListener('click', () => {
   const registerData = {
@@ -95,6 +97,7 @@ loginBtn.addEventListener('click', () => {
       console.log('hellloow>>>>>>', response.data);
       if (!response.data.error)
       {
+        document.body.appendChild(diffContainer);
         document.body.appendChild(createGameBtn);
         loginContainer.innerHTML = '';
         document.body.removeChild(loginContainer);
@@ -104,11 +107,60 @@ loginBtn.addEventListener('click', () => {
 });
 // ************** create card  elements **************//
 const flashedCards = document.createElement('h5');
+const allCards = document.createElement('h5');
 
 const cardContainer = document.createElement('div');
-cardContainer.classList.add('container', 'form-signin', 'bg-light', 'cardContainer');
+cardContainer.classList.add('container', 'bg-light', 'cardContainer');
+const allCardContainer = document.createElement('div');
+allCardContainer.classList.add('container', 'bg-light', 'cardContainer');
+allCardContainer.innerText = "Select the card order"
+
+// const ansContainer = document.createElement('div');
+// ansContainer.classList.add('container', 'bg-light', 'cardContainer');
+// ansContainer.innerText = "Your Selection"
 
 cardContainer.appendChild(flashedCards)
+
+const diffContainer = document.createElement('div');
+diffContainer.classList.add('container', 'bg-light', 'cardContainer');
+
+const bgnBtn = document.createElement('input');
+bgnBtn.type = 'radio';
+bgnBtn.name = 'difficulty';
+bgnBtn.checked = false;
+bgnBtn.value = 'beginner';
+const bgnLabel = document.createElement('label');
+const bgnDescription = document.createTextNode('Beginner');
+bgnLabel.appendChild(bgnDescription);
+
+const advBtn = document.createElement('input');
+advBtn.type = 'radio';
+advBtn.name = 'difficulty';
+advBtn.checked = false;
+advBtn.value = 'advanced';
+const advLabel = document.createElement('label');
+const advDescription = document.createTextNode('Advanced');
+advLabel.appendChild(advDescription);
+
+const expBtn = document.createElement('input');
+expBtn.type = 'radio';
+expBtn.name = 'difficulty';
+expBtn.checked = false;
+expBtn.value = 'expert';
+const expLabel = document.createElement('label');
+const expDescription = document.createTextNode('Expert');
+expLabel.appendChild(expDescription);
+
+diffContainer.appendChild(bgnBtn)
+diffContainer.appendChild(bgnLabel)
+diffContainer.appendChild(advBtn)
+diffContainer.appendChild(advLabel)
+diffContainer.appendChild(expBtn)
+diffContainer.appendChild(expLabel)
+
+// create submit button
+const submitAnsBtn = document.createElement('button');
+submitAnsBtn.innerText = 'Submit';
 // create card function
 const createCard = (cardInfo) => {
   const suit = document.createElement('div');
@@ -120,7 +172,7 @@ const createCard = (cardInfo) => {
   name.innerText = cardInfo.displayName;
 
   const card = document.createElement('div');
-  card.classList.add('card', 'highlight');
+  card.classList.add('card');
  
   card.appendChild(name);
   card.appendChild(suit);
@@ -128,41 +180,122 @@ const createCard = (cardInfo) => {
   return card;
 };
 
-const runGame = function ({ flashCards,
-}) {
+const displayCards = function ({ flashCards,})
+{
   let cardElement;
-  // manipulate DOM
-  const gameContainer = document.querySelector('#game-container');
+    // shuffle the mixed flash card array
+  for (let i = flashCards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [flashCards[i], flashCards[j]] = [flashCards[j], flashCards[i]];
+    }
+    
+  const cardSelectionContainer = document.querySelector('#select-container');
+  // append all 10 cards for selection
   for (let i = 0; i < flashCards.length; i += 1){
     cardElement = createCard(flashCards[i]);
     cardElement.id = `card${i}`;
-    flashedCards.appendChild(cardElement)
+    allCards.appendChild(cardElement);
   }
+  allCardContainer.appendChild(allCards)
+  cardSelectionContainer.appendChild(allCardContainer);
+}
+
+const flashingCards = function ({ flashCards, 
+}, gameLevel) {
+  let cardElement;
+  let numOfCards;
+  // manipulate DOM
+  if (gameLevel == 'beginner'){
+    numOfCards = 5
+  } else if (gameLevel == 'advanced'){
+    numOfCards = 7
+  } else {
+    numOfCards = 10
+  }
+  const gameContainer = document.querySelector('#game-container');
+
+  for (let i = 0; i < numOfCards; i += 1){
+    displayedCards.push(flashCards[i])
+    cardElement = createCard(flashCards[i]);
+    cardElement.id = `card${i}`;
+    flashedCards.appendChild(cardElement);
+  }
+  console.log('flashCards :>> ', flashCards);
+  console.log('displayedCards :>> ', displayedCards);
+  console.log('displayedCards :>> ', displayedCards[0].name);
+  setTimeout(() => {
+    gameContainer.innerText = '';
+    }, 3000);
     
- 
   console.log('flashCards :>> ', flashCards);
   gameContainer.appendChild(cardContainer);
 };
 
-const createGame = function () {
-  document.body.removeChild(createGameBtn);
+const cardSelected = (e) => {
+   if (e.target.nodeName === "DIV"){
+    document.getElementById(e.target.id).remove()
+    // ansContainer.appendChild(e.target)
+    // document.body.appendChild(ansContainer)
+    const displayName = e.target.firstChild.innerText;
+    const cardSuitSymbol = e.target.lastChild.innerText;
+    console.log(e.target.firstChild.innerText)
+    console.log(e.target.lastChild.innerText)
+    selectedCards.push({displayName, suitSymbol: cardSuitSymbol })
+    console.log('selectedCards :>> ', selectedCards);
+  }
+}
+
+const cardSelection = () => {
+const card0 = document.getElementById('card0');
+card0.addEventListener('click', cardSelected);
+const card1 = document.getElementById('card1');
+card1.addEventListener('click', cardSelected)
+const card2 = document.getElementById('card2');
+card2.addEventListener('click', cardSelected)
+const card3 = document.getElementById('card3');
+card3.addEventListener('click', cardSelected)
+const card4 = document.getElementById('card4');
+card4.addEventListener('click', cardSelected)
+const card5 = document.getElementById('card5');
+card5.addEventListener('click', cardSelected)
+const card6 = document.getElementById('card6');
+card6.addEventListener('click', cardSelected)
+const card7 = document.getElementById('card7');
+card7.addEventListener('click', cardSelected)
+const card8 = document.getElementById('card8');
+card8.addEventListener('click', cardSelected)
+const card9 = document.getElementById('card9');
+card9.addEventListener('click', cardSelected)
+}
+
+createGameBtn.addEventListener('click', () => {
+ document.body.removeChild(createGameBtn);
   // Make a request to create a new game
   axios
-    .post('/games')
-    .then((response) => {
+   .post('/games')
+   .then( (response) => {
     // set the global value to the new game.
       currentGame = response.data;
-      console.log(currentGame);
+      console.log('currentGame>>>>>>>',currentGame);
+      const difficulty = document.querySelector('input[name="difficulty"]:checked');
+      const gameLevel = difficulty.value
+       document.body.removeChild(diffContainer);
       // display it out to the user
-      runGame(currentGame);
+      flashingCards(currentGame, gameLevel);
+      setTimeout(() => {
+      displayCards(currentGame);
+      cardSelection();
+    }, 3000);
+     
     })
     .catch((error) => {
       // handle error
       console.log(error);
     });
-};
+  
+});
 
-// manipulate DOM, set up create game button
-createGameBtn.addEventListener('click', createGame);
-createGameBtn.innerText = 'Create Game';
-// document.body.appendChild(createGameBtn);
+
+      
+  
+

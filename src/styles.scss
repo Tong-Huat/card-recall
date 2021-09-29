@@ -24,6 +24,17 @@ h1 {
   text-align: center;
 }
 
+.cardContainer {
+  width: 100%;
+  width: 600px;
+  padding: 10px;
+  margin: 5vh auto;
+  color: #212121;
+  border: 4px solid #ff993b;
+  border-radius: 25px;
+  text-align: center;
+}
+
 .form-signin .checkbox {
   font-weight: 400;
 }
