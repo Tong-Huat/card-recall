@@ -25,11 +25,12 @@ export default function initUsersController(db) {
         response.cookie('userId', user.id);
         response.send({ user });
       } else {
-        throw new Error('Please login to proceed');
+        throw Error('Wrong Login Details');
       }
     }
     catch (error) {
-      response.send({ error: error.message });
+      console.log('login error')
+      response.status(500).send({ error: error.message });
     }
   };
 
@@ -51,10 +52,11 @@ export default function initUsersController(db) {
         });
         response.send('userCreated');
       } else {
-        throw new Error('Failed Registration');
+        throw Error('Failed Registration');
       }
     } catch (error) {
-      response.send({ error: error.message });
+      console.log('error in user registration');
+      response.status(500).send({ error: error.message });
     }
   };
   return {

@@ -4,6 +4,8 @@ import axios from 'axios';
 let currentGame = null;
 let displayedCards = []
 let selectedCards = []
+const gameContainer = document.querySelector('#game-container');
+const cardSelectionContainer = document.querySelector('#select-container');
 // create registrations on landing page
 const registrationContainer = document.createElement('div');
 registrationContainer.classList.add('container', 'form-signin', 'bg-light');
@@ -31,7 +33,7 @@ registrationContainer.appendChild(registrationText);
 registrationContainer.appendChild(regUserNameDiv);
 registrationContainer.appendChild(regPasswordDiv);
 registrationContainer.appendChild(registrationBtn);
-document.body.appendChild(registrationContainer);
+// document.body.appendChild(registrationContainer);
 
 // ************** create login on landing page **************//
 const loginContainer = document.createElement('div');
@@ -60,12 +62,34 @@ loginContainer.appendChild(loginText);
 loginContainer.appendChild(userNameDiv);
 loginContainer.appendChild(passwordDiv);
 loginContainer.appendChild(loginBtn);
-document.body.appendChild(loginContainer);
+// document.body.appendChild(loginContainer);
 
 
-// create game btn
-const createGameBtn = document.createElement('button');
-createGameBtn.innerText = 'Create Game';
+// create play game btn
+const playBtn = document.createElement('button');
+playBtn.innerText = 'Play Game';
+
+// create play again btn
+const playAgainBtn = document.createElement('button');
+playAgainBtn.innerText = 'Play Again';
+
+const checkLoggedIn = () => {
+  axios.get('/isloggedin')
+    .then((response) => {
+      console.log('response from login :>> ', response);
+      if (response.data.isLoggedIn === true)
+      {
+        document.body.appendChild(diffContainer);
+        document.body.appendChild(playBtn);
+      }
+      else {
+        // render other buttons
+        document.body.appendChild(registrationContainer);
+        document.body.appendChild(loginContainer);
+      }
+    })
+    .catch((error) => console.log('error from logging in', error));
+};
 
 registrationBtn.addEventListener('click', () => {
   const registerData = {
@@ -83,6 +107,7 @@ registrationBtn.addEventListener('click', () => {
         registrationContainer.innerHTML = '';
       }
     });
+     checkLoggedIn();
 });
 
 loginBtn.addEventListener('click', () => {
@@ -98,12 +123,13 @@ loginBtn.addEventListener('click', () => {
       if (!response.data.error)
       {
         document.body.appendChild(diffContainer);
-        document.body.appendChild(createGameBtn);
+        document.body.appendChild(playBtn);
         loginContainer.innerHTML = '';
         document.body.removeChild(loginContainer);
         document.body.removeChild(registrationContainer);
       }
     });
+     checkLoggedIn();
 });
 // ************** create card  elements **************//
 const flashedCards = document.createElement('h5');
@@ -114,10 +140,6 @@ cardContainer.classList.add('container', 'bg-light', 'cardContainer');
 const allCardContainer = document.createElement('div');
 allCardContainer.classList.add('container', 'bg-light', 'cardContainer');
 allCardContainer.innerText = "Select the card order"
-
-// const ansContainer = document.createElement('div');
-// ansContainer.classList.add('container', 'bg-light', 'cardContainer');
-// ansContainer.innerText = "Your Selection"
 
 cardContainer.appendChild(flashedCards)
 
@@ -161,6 +183,10 @@ diffContainer.appendChild(expLabel)
 // create submit button
 const submitAnsBtn = document.createElement('button');
 submitAnsBtn.innerText = 'Submit';
+
+const resultOutcome = document.createElement('h3');
+
+
 // create card function
 const createCard = (cardInfo) => {
   const suit = document.createElement('div');
@@ -189,7 +215,7 @@ const displayCards = function ({ flashCards,})
         [flashCards[i], flashCards[j]] = [flashCards[j], flashCards[i]];
     }
     
-  const cardSelectionContainer = document.querySelector('#select-container');
+ 
   // append all 10 cards for selection
   for (let i = 0; i < flashCards.length; i += 1){
     cardElement = createCard(flashCards[i]);
@@ -212,7 +238,7 @@ const flashingCards = function ({ flashCards,
   } else {
     numOfCards = 10
   }
-  const gameContainer = document.querySelector('#game-container');
+ 
 
   for (let i = 0; i < numOfCards; i += 1){
     displayedCards.push(flashCards[i])
@@ -268,8 +294,8 @@ const card9 = document.getElementById('card9');
 card9.addEventListener('click', cardSelected)
 }
 
-createGameBtn.addEventListener('click', () => {
- document.body.removeChild(createGameBtn);
+const createGame = () => {
+ document.body.removeChild(playBtn);
   // Make a request to create a new game
   axios
    .post('/games')
@@ -285,6 +311,7 @@ createGameBtn.addEventListener('click', () => {
       setTimeout(() => {
       displayCards(currentGame);
       cardSelection();
+      document.body.appendChild(submitAnsBtn);
     }, 3000);
      
     })
@@ -292,10 +319,50 @@ createGameBtn.addEventListener('click', () => {
       // handle error
       console.log(error);
     });
-  
-});
+};
 
+const result = () => {
+  let count = 0;
+  for(let i = 0; i < displayedCards.length; i += 1){
+    if(displayedCards[i].displayName === selectedCards[i].displayName && 
+      displayedCards[i].suitSymbol === selectedCards[i].suitSymbol){
+        count += 1;       
+      }
+  }
+   if(count === displayedCards.length){
+      resultOutcome.innerText = 'You won'
+      console.log('you won')
+      document.body.removeChild(submitAnsBtn);
+      } else {
+      resultOutcome.innerText = 'You lost'
+      console.log('you lost ');
+      document.body.removeChild(submitAnsBtn);
 
+      }
+    document.body.appendChild(resultOutcome)
+    document.body.appendChild(playAgainBtn)
+
+}
+
+const playAgain = () =>{
+  allCards.innerHTML = ""
+  // allCards.innerText = ""
+  // flashedCards.innerText = ""
+  flashedCards.innerHTML = ""
+  cardSelectionContainer.removeChild(allCardContainer);
+  document.body.removeChild(resultOutcome)
+  document.body.removeChild(playAgainBtn)
+  currentGame = null;
+  displayedCards = []
+  selectedCards = []
+  document.body.appendChild(diffContainer);
+  document.body.appendChild(playBtn);
+}
+
+checkLoggedIn()
+playBtn.addEventListener('click', createGame);
+submitAnsBtn.addEventListener('click', result);
+playAgainBtn.addEventListener('click', playAgain);
       
   
 
