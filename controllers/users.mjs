@@ -30,10 +30,11 @@ export default function initUsersController(db) {
     }
     catch (error) {
       console.log('login error')
-      response.status(500).send({ error: error.message });
+      response.send({ error: error.message });
     }
   };
 
+  
   const register = async (request, response) => {
     const user = request.body;
     try {
@@ -56,7 +57,7 @@ export default function initUsersController(db) {
       }
     } catch (error) {
       console.log('error in user registration');
-      response.status(500).send({ error: error.message });
+      response.send({ error: error.message });
     }
   };
   return {

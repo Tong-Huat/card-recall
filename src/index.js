@@ -62,7 +62,8 @@ loginContainer.appendChild(loginText);
 loginContainer.appendChild(userNameDiv);
 loginContainer.appendChild(passwordDiv);
 loginContainer.appendChild(loginBtn);
-// document.body.appendChild(loginContainer);
+
+const errorContainer = document.querySelector('#error-container');
 
 
 // create play game btn
@@ -96,17 +97,23 @@ registrationBtn.addEventListener('click', () => {
     name: regUserName.value,
     password: regPassword.value,
   };
+  
   console.log(registerData);
   axios
     .post('/register', registerData)
     .then((response) => {
       console.log('hellloow>>>>>>', response.data);
-      if (!response.data.error)
-      {
+      if (response.data.error){
+        throw response.data.error;
+      } else {
         document.body.removeChild(registrationContainer);
         registrationContainer.innerHTML = '';
       }
-    });
+    })
+    .catch((error) => {
+      errorContainer.innerHTML = '<p style="color:red">Invalid Registration Details</p>';
+      console.log(error);
+    })
      checkLoggedIn();
 });
 
@@ -120,15 +127,22 @@ loginBtn.addEventListener('click', () => {
     .post('/login', loginData)
     .then((response) => {
       console.log('hellloow>>>>>>', response.data);
-      if (!response.data.error)
+      if (response.data.error)
       {
+         throw response.data.error;
+      } else {
         document.body.appendChild(diffContainer);
         document.body.appendChild(playBtn);
         loginContainer.innerHTML = '';
         document.body.removeChild(loginContainer);
         document.body.removeChild(registrationContainer);
+        document.body.removeChild(errorContainer);
       }
-    });
+    })
+      .catch((error) => {
+      errorContainer.innerHTML = '<p style="color:red">Invalid Login Details</p>';
+      console.log(error);
+    })
      checkLoggedIn();
 });
 // ************** create card  elements **************//
