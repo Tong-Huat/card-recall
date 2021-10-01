@@ -152,7 +152,7 @@ export default function initGamesController(db) {
   };
 
   // deal two new cards from the deck.
-  const deal = async (request, response) => {
+  const result = async (request, response) => {
     try {
       // get the game by the ID passed in the request
       const game = await db.Game.findByPk(request.params.id);
@@ -213,7 +213,7 @@ export default function initGamesController(db) {
   // return all functions we define in an object
   // refer to the routes file above to see this used
   return {
-    deal,
+    result,
     create,
     refresh,
   };
