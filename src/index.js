@@ -168,8 +168,7 @@ const createCard = (cardInfo) => {
 };
 
 // create num of cards to be flashed according to difficulty level 
-const flashingCards = ({ flashCards, 
-}, gameLevel) => {
+const flashingCards = ({ flashCards, }, gameLevel) => {
   let cardElement;
   let numOfCards;
   // manipulate DOM
@@ -181,13 +180,6 @@ const flashingCards = ({ flashCards,
     numOfCards = 10
   }
  
-    // setTimeout(() =>  {
-    // for (let i = 0; i < numOfCards; i += 1){
-    // displayedCards.push(flashCards[i])
-    // cardElement = createCard(flashCards[i]);
-    // cardElement.id = `card${i}`;
-    // flashedCards.appendChild(cardElement);
-    // }}, 1500 );
   
   for (let i = 0; i < numOfCards; i += 1){
     displayedCards.push(flashCards[i])
@@ -196,12 +188,13 @@ const flashingCards = ({ flashCards,
     flashedCards.appendChild(cardElement);
   console.log('flashCards :>> ', flashCards);
   console.log('displayedCards :>> ', displayedCards);
-  console.log('displayedCards :>> ', displayedCards[0].name);
+  
   setTimeout(() => {
     gameContainer.innerText = '';
     }, 3000);
     
   console.log('flashCards :>> ', flashCards);
+  flashedCardContainer.appendChild(flashedCards);
   gameContainer.appendChild(flashedCardContainer);
 };
 }
@@ -283,6 +276,7 @@ const displayFinalResults = () => {
   allCardsContainer.appendChild(allCards)
   cardSelectionContainer.appendChild(allCardsContainer);
 }
+
 registrationBtn.addEventListener('click', () => {
   const registerData = {
     name: regUserName.value,
@@ -339,6 +333,7 @@ loginBtn.addEventListener('click', () => {
 
 playBtn.addEventListener('click', () => {
   document.body.removeChild(playBtn);
+  gameContainer.appendChild(flashedCardContainer);
   // Make a request to create a new game
   axios
    .post('/games')
@@ -348,7 +343,7 @@ playBtn.addEventListener('click', () => {
       console.log('currentGame>>>>>>>',currentGame);
       const difficulty = document.querySelector('input[name="difficulty"]:checked');
       const gameLevel = difficulty.value
-       document.body.removeChild(diffContainer);
+      document.body.removeChild(diffContainer);
       // display it out to the user
       flashingCards(currentGame, gameLevel);
       setTimeout(() => {
@@ -365,6 +360,11 @@ playBtn.addEventListener('click', () => {
 });
 
 submitAnsBtn.addEventListener('click', () => {
+  let cardDifference = displayedCards.length - selectedCards.length;
+  if(displayedCards.length > selectedCards.length){ 
+    errorContainer.innerHTML = `<p style="color:red">Number of selected cards is lesser that those displayed. Pls select ${cardDifference} more cards! </p>`;
+    setTimeout(() => { errorContainer.innerHTML = ""}, 3000)
+  } else {
   allCards.innerHTML = ""
   flashedCards.innerHTML = ""
   cardSelectionContainer.removeChild(allCardsContainer);
@@ -391,15 +391,17 @@ submitAnsBtn.addEventListener('click', () => {
     displayFinalResults();
     document.body.appendChild(resultOutcome)
     document.body.appendChild(playAgainBtn)
+  }
   });
 
 
 playAgainBtn.addEventListener('click', () =>{
+  flashedCardContainer.innerText = ""
+  allCardsContainer.innerText = "Select the card order"
   allCards.innerHTML = ""
-  // allCards.innerText = ""
-  // flashedCards.innerText = ""
   flashedCards.innerHTML = ""
   cardSelectionContainer.removeChild(allCardsContainer);
+  gameContainer.removeChild(flashedCardContainer);
   document.body.removeChild(resultOutcome)
   document.body.removeChild(playAgainBtn)
   currentGame = null;
