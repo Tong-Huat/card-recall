@@ -126,12 +126,13 @@ playBtn.innerText = 'Play Game';
 
 
 // ************** create card and card holders **************//
-const flashedCards = document.createElement('h5');
+const flashedCards = document.createElement('div');
+flashedCards.classList.add('flashedCard')
 const flashedCardContainer = document.createElement('div');
 flashedCardContainer.classList.add('container', 'bg-light', 'cardContainer');
 flashedCardContainer.appendChild(flashedCards)
 
-const allCards = document.createElement('h5');
+const allCards = document.createElement('div');
 const allCardsContainer = document.createElement('div');
 allCardsContainer.classList.add('container', 'bg-light', 'cardContainer');
 allCardsContainer.innerText = "Select the card order"
@@ -191,7 +192,7 @@ const flashingCards = ({ flashCards, }, gameLevel) => {
   
   setTimeout(() => {
     gameContainer.innerText = '';
-    }, 3000);
+    }, 5000);
     
   console.log('flashCards :>> ', flashCards);
   flashedCardContainer.appendChild(flashedCards);

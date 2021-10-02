@@ -130,7 +130,6 @@ export default function initGamesController(db) {
     const gameInfo = {
       gameState: {
         flashCards,
-     
       },
       created_by: request.cookies.userId,
     };
@@ -139,6 +138,7 @@ export default function initGamesController(db) {
       // run the DB INSERT query
       const newGame = await db.Game.create(gameInfo);
 
+  
       // send the new game back to the user.
       // dont include the deck so the user can't cheat
       response.send({

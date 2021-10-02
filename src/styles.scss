@@ -61,12 +61,47 @@ h1 {
 .card {
   margin: 48px 24px 20px 24px;
   padding: 8px;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 1);
   height: 90px;
   width: 60px;
   border-radius: 8px;
   display: inline-block;
   vertical-align: top;
+}
+
+.flashedCard {
+  .card {
+    opacity: 0;
+    animation-name: fadeinCard;
+    animation-duration: 4.8s;
+  }
+}
+@keyframes fadeinCard {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.flashedCard .card:nth-child(1) {
+  animation-delay: 0s;
+}
+.flashedCard .card:nth-child(2) {
+  animation-delay: 0.8s;
+}
+.flashedCard .card:nth-child(3) {
+  animation-delay: 1.6s;
+}
+.flashedCard .card:nth-child(4) {
+  animation-delay: 2.4s;
+}
+.flashedCard .card:nth-child(5) {
+  animation-delay: 3.2s;
 }
 
 .suit {
@@ -82,9 +117,9 @@ h1 {
 }
 
 .red {
-  color: red;
+  color: rgba(255, 0, 0, 1);
 }
 
 .black {
-  color: black;
+  color: rgba(0, 0, 0, 1);
 }
