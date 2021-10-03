@@ -69,41 +69,6 @@ h1 {
   vertical-align: top;
 }
 
-.flashedCard {
-  .card {
-    opacity: 0;
-    animation-name: fadeinCard;
-    animation-duration: 4.8s;
-  }
-}
-@keyframes fadeinCard {
-  0% {
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.flashedCard .card:nth-child(1) {
-  animation-delay: 0s;
-}
-.flashedCard .card:nth-child(2) {
-  animation-delay: 0.8s;
-}
-.flashedCard .card:nth-child(3) {
-  animation-delay: 1.6s;
-}
-.flashedCard .card:nth-child(4) {
-  animation-delay: 2.4s;
-}
-.flashedCard .card:nth-child(5) {
-  animation-delay: 3.2s;
-}
-
 .suit {
   margin: 5px;
   font-size: 18px;
@@ -122,4 +87,133 @@ h1 {
 
 .black {
   color: rgba(0, 0, 0, 1);
+}
+
+// flashing for beginner mode
+.flashedCard {
+  .beginner {
+    opacity: 0;
+    animation-name: fade5Card;
+    animation-duration: 5s;
+  }
+}
+@keyframes fade5Card {
+  0% {
+    opacity: 0;
+  }
+  19% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0;
+  }
+}
+
+.flashedCard .beginner:nth-child(1) {
+  animation-delay: 0s;
+}
+.flashedCard .beginner:nth-child(2) {
+  animation-delay: 1s;
+}
+.flashedCard .beginner:nth-child(3) {
+  animation-delay: 2s;
+}
+.flashedCard .beginner:nth-child(4) {
+  animation-delay: 3s;
+}
+.flashedCard .beginner:nth-child(5) {
+  animation-delay: 4s;
+}
+
+// flashing for adv mode
+.flashedCard {
+  .advanced {
+    opacity: 0;
+    animation-name: fade7Card;
+    animation-duration: 7s;
+  }
+}
+@keyframes fade7Card {
+  0% {
+    opacity: 0;
+  }
+  13% {
+    opacity: 1;
+  }
+  14% {
+    opacity: 0;
+  }
+}
+
+.flashedCard .advanced:nth-child(1) {
+  animation-delay: 0s;
+}
+.flashedCard .advanced:nth-child(2) {
+  animation-delay: 1s;
+}
+.flashedCard .advanced:nth-child(3) {
+  animation-delay: 2s;
+}
+.flashedCard .advanced:nth-child(4) {
+  animation-delay: 3s;
+}
+.flashedCard .advanced:nth-child(5) {
+  animation-delay: 4s;
+}
+.flashedCard .advanced:nth-child(6) {
+  animation-delay: 5s;
+}
+.flashedCard .advanced:nth-child(7) {
+  animation-delay: 6s;
+}
+
+// flashing for expert mode
+.flashedCard {
+  .expert {
+    opacity: 0;
+    animation-name: fade10Card;
+    animation-duration: 10s;
+  }
+}
+@keyframes fade10Card {
+  0% {
+    opacity: 0;
+  }
+  9% {
+    opacity: 1;
+  }
+  10% {
+    opacity: 0;
+  }
+}
+
+.flashedCard .expert:nth-child(1) {
+  animation-delay: 0s;
+}
+.flashedCard .expert:nth-child(2) {
+  animation-delay: 1s;
+}
+.flashedCard .expert:nth-child(3) {
+  animation-delay: 2s;
+}
+.flashedCard .expert:nth-child(4) {
+  animation-delay: 3s;
+}
+.flashedCard .expert:nth-child(5) {
+  animation-delay: 4s;
+}
+.flashedCard .expert:nth-child(6) {
+  animation-delay: 5s;
+}
+.flashedCard .expert:nth-child(7) {
+  animation-delay: 6s;
+}
+.flashedCard .expert:nth-child(8) {
+  animation-delay: 7s;
+}
+.flashedCard .expert:nth-child(9) {
+  animation-delay: 8s;
+}
+.flashedCard .expert:nth-child(10) {
+  animation-delay: 9s;
 }

@@ -4,6 +4,7 @@ import axios from 'axios';
 let currentGame = null;
 let displayedCards = []
 let selectedCards = []
+let numOfCards;
 // query for game and card container
 const gameContainer = document.querySelector('#game-container');
 const cardSelectionContainer = document.querySelector('#select-container');
@@ -126,17 +127,19 @@ playBtn.innerText = 'Play Game';
 
 
 // ************** create card and card holders **************//
-const flashedCards = document.createElement('div');
+const flashedCards = document.createElement('h5');
 flashedCards.classList.add('flashedCard')
 const flashedCardContainer = document.createElement('div');
 flashedCardContainer.classList.add('container', 'bg-light', 'cardContainer');
 flashedCardContainer.appendChild(flashedCards)
 
-const allCards = document.createElement('div');
+const allCards = document.createElement('h5');
 const allCardsContainer = document.createElement('div');
 allCardsContainer.classList.add('container', 'bg-light', 'cardContainer');
 allCardsContainer.innerText = "Select the card order"
 
+const resultFlashedCards = document.createElement('div');
+resultFlashedCards.classList.add('resultCard')
 // create submit ans button
 const submitAnsBtn = document.createElement('button');
 submitAnsBtn.innerText = 'Submit';
@@ -171,33 +174,57 @@ const createCard = (cardInfo) => {
 // create num of cards to be flashed according to difficulty level 
 const flashingCards = ({ flashCards, }, gameLevel) => {
   let cardElement;
-  let numOfCards;
+  
   // manipulate DOM
   if (gameLevel == 'beginner'){
-    numOfCards = 5
-  } else if (gameLevel == 'advanced'){
-    numOfCards = 7
-  } else {
-    numOfCards = 10
-  }
- 
-  
-  for (let i = 0; i < numOfCards; i += 1){
+    numOfCards = 5  
+    for (let i = 0; i < numOfCards; i += 1){
     displayedCards.push(flashCards[i])
     cardElement = createCard(flashCards[i]);
     cardElement.id = `card${i}`;
+    cardElement.classList.toggle('beginner')
     flashedCards.appendChild(cardElement);
-  console.log('flashCards :>> ', flashCards);
-  console.log('displayedCards :>> ', displayedCards);
-  
-  setTimeout(() => {
+    console.log('flashCards :>> ', flashCards);
+    console.log('displayedCards :>> ', displayedCards);
+    setTimeout(() => {
     gameContainer.innerText = '';
     }, 5000);
-    
-  console.log('flashCards :>> ', flashCards);
-  flashedCardContainer.appendChild(flashedCards);
-  gameContainer.appendChild(flashedCardContainer);
 };
+    
+  } else if (gameLevel == 'advanced'){
+    numOfCards = 7
+    for (let i = 0; i < numOfCards; i += 1){
+    displayedCards.push(flashCards[i])
+    cardElement = createCard(flashCards[i]);
+    cardElement.id = `card${i}`;
+    cardElement.classList.toggle('advanced')
+    flashedCards.appendChild(cardElement);
+    console.log('flashCards :>> ', flashCards);
+    console.log('displayedCards :>> ', displayedCards);
+    setTimeout(() => {
+    gameContainer.innerText = '';
+    }, 7000);
+  };
+  } else {
+    numOfCards = 10
+    for (let i = 0; i < numOfCards; i += 1){
+    displayedCards.push(flashCards[i])
+    cardElement = createCard(flashCards[i]);
+    cardElement.id = `card${i}`;
+    cardElement.classList.toggle('expert')
+    flashedCards.appendChild(cardElement);
+    console.log('flashCards :>> ', flashCards);
+    console.log('displayedCards :>> ', displayedCards);
+    setTimeout(() => {
+    gameContainer.innerText = '';
+    }, 10000);
+  };
+  }
+    console.log('flashCards :>> ', flashCards);
+    flashedCardContainer.appendChild(flashedCards);
+    gameContainer.appendChild(flashedCardContainer);
+  
+
 }
 
 // display all cards in array for user to select order
@@ -268,10 +295,10 @@ const displayFinalResults = () => {
   }
   for (let i = 0; i < displayedCards.length; i += 1){
     cardElement = createCard(displayedCards[i]);
-    flashedCards.appendChild(cardElement);
+    resultFlashedCards.appendChild(cardElement);
   }
   flashedCardContainer.innerText = "Actual Card Order"
-  flashedCardContainer.appendChild(flashedCards)
+  flashedCardContainer.appendChild(resultFlashedCards)
   gameContainer.appendChild(flashedCardContainer);
   allCardsContainer.innerText = "Your Selected Order"
   allCardsContainer.appendChild(allCards)
@@ -347,11 +374,22 @@ playBtn.addEventListener('click', () => {
       document.body.removeChild(diffContainer);
       // display it out to the user
       flashingCards(currentGame, gameLevel);
+      if (numOfCards == 5){
       setTimeout(() => {
       displayCards(currentGame);
       cardSelection();
       document.body.appendChild(submitAnsBtn);
-    }, 3000);
+    }, 6000);} else if (numOfCards == 7){
+      setTimeout(() => {
+      displayCards(currentGame);
+      cardSelection();
+      document.body.appendChild(submitAnsBtn);
+    }, 8000);} else {
+      setTimeout(() => {
+      displayCards(currentGame);
+      cardSelection();
+      document.body.appendChild(submitAnsBtn);
+    }, 10000);}
      
     })
     .catch((error) => {
@@ -395,12 +433,11 @@ submitAnsBtn.addEventListener('click', () => {
   }
   });
 
-
 playAgainBtn.addEventListener('click', () =>{
   flashedCardContainer.innerText = ""
   allCardsContainer.innerText = "Select the card order"
   allCards.innerHTML = ""
-  flashedCards.innerHTML = ""
+  resultFlashedCards.innerHTML = ""
   cardSelectionContainer.removeChild(allCardsContainer);
   gameContainer.removeChild(flashedCardContainer);
   document.body.removeChild(resultOutcome)
