@@ -5,10 +5,11 @@ let currentGame = null;
 let displayedCards = []
 let selectedCards = []
 let numOfCards;
-// query for game and card container
+// query for game,card, error and instrutions container
 const gameContainer = document.querySelector('#game-container');
 const cardSelectionContainer = document.querySelector('#select-container');
-const errorContainer = document.querySelector('#error-container');
+const errorMessage = document.querySelector('#error-container');
+
 // create registrations on landing page
 const registrationContainer = document.createElement('div');
 registrationContainer.classList.add('container', 'form-signin', 'bg-light');
@@ -324,7 +325,7 @@ registrationBtn.addEventListener('click', () => {
       }
     })
     .catch((error) => {
-      errorContainer.innerHTML = '<p style="color:red">Invalid Registration Details</p>';
+      errorMessage.innerHTML = '<p style="color:red">Invalid Registration Details</p>';
       console.log(error);
     })
      checkLoggedIn();
@@ -344,16 +345,19 @@ loginBtn.addEventListener('click', () => {
       {
          throw response.data.error;
       } else {
+        const gameInfoContainer = document.querySelector('#info-container');
+        gameInfoContainer.classList.add('container', 'form-signin', 'bg-light');
+        gameInfoContainer.innerHTML = '-A series of cards will be flashed for 1 sec each <br>-At the end of the flashing, pls select the cards in the order that they were flashed. <br> -To win the game, the exact order of the cards must be correct <br> Beginner - 5 cards <br> Advanced - 7 cards <br> Expert - 10 cards';
         document.body.appendChild(diffContainer);
         document.body.appendChild(playBtn);
         loginContainer.innerHTML = '';
         document.body.removeChild(loginContainer);
         document.body.removeChild(registrationContainer);
-        document.body.removeChild(errorContainer);
+        document.body.removeChild(errorMessage);
       }
     })
       .catch((error) => {
-      errorContainer.innerHTML = '<p style="color:red">Invalid Login Details</p>';
+      errorMessage.innerHTML = '<p style="color:red">Invalid Login Details</p>';
       console.log(error);
     })
      checkLoggedIn();
@@ -401,8 +405,8 @@ playBtn.addEventListener('click', () => {
 submitAnsBtn.addEventListener('click', () => {
   let cardDifference = displayedCards.length - selectedCards.length;
   if(displayedCards.length > selectedCards.length){ 
-    errorContainer.innerHTML = `<p style="color:red">Number of selected cards is lesser that those displayed. Pls select ${cardDifference} more cards! </p>`;
-    setTimeout(() => { errorContainer.innerHTML = ""}, 3000)
+    errorMessage.innerHTML = `<p style="color:red">Number of selected cards is lesser that those displayed. Pls select ${cardDifference} more cards! </p>`;
+    setTimeout(() => { errorMessage.innerHTML = ""}, 3000)
   } else {
   allCards.innerHTML = ""
   flashedCards.innerHTML = ""
