@@ -52,6 +52,7 @@ module.exports = {
       },
     });
 
+    // TODO: need to del this joint table and fix bug like Justin's 
     await queryInterface.createTable('game_winners', {
       id: {
         allowNull: false,

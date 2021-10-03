@@ -33,9 +33,9 @@ else {
 db.Game = gameModel(sequelize, Sequelize.DataTypes);
 db.User = userModel(sequelize, Sequelize.DataTypes);
 
-db.User.belongsTo(db.Game, { through: 'game_winners' });
+db.User.belongsToMany(db.Game, { through: 'game_winners' });
 db.Game.belongsToMany(db.User, { through: 'game_winners' });
-
+// TODO need to change above to below
 // db.User.hasMany(db.Game);
 // db.Game.belongsTo(db.User);
 
