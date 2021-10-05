@@ -23,6 +23,7 @@ export default function bindRoutes(app) {
   app.get('/isloggedin', checkLoggedIn);
   app.post('/register', UsersController.register);
   app.post('/login', UsersController.login);
+  app.get('/user', UsersController.dashboard);
   // create a new game
   app.post('/games', GamesController.create);
 

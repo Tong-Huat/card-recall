@@ -6,6 +6,7 @@ let displayedCards = []
 let selectedCards = []
 let numOfCards;
 // query for game,card, error and instrutions container
+const dashboardDiv = document.querySelector('#dashboard');
 const gameContainer = document.querySelector('#game-container');
 const cardSelectionContainer = document.querySelector('#select-container');
 const errorContainer = document.querySelector('#error-container');
@@ -316,8 +317,8 @@ registrationBtn.addEventListener('click', () => {
       if (response.data.error){
         throw response.data.error;
       } else {
-        document.body.removeChild(registrationContainer);
-        registrationContainer.innerHTML = '';
+        // document.body.removeChild(registrationContainer);
+        registrationContainer.remove();
       }
     })
     .catch((error) => {
@@ -341,14 +342,27 @@ loginBtn.addEventListener('click', () => {
       {
          throw response.data.error;
       } else {
+        const userDiv = document.createElement('div');
+        dashboardDiv.appendChild(userDiv);
+
+        axios
+        .get('/user')
+        .then((responseUser) => {
+          console.log(responseUser.data);
+          userDiv.innerHTML = `User: ${responseUser.data.user.name} <br> Wins Record: XX`;
+        })
+        .catch((error) => console.log(error));
+      
         gameInfoContainer.classList.add('container', 'form-signin', 'bg-light');
         gameInfoContainer.innerHTML = '-A series of cards will be flashed for 1 sec each <br>-At the end of the flashing, pls select the cards in the order that they were flashed. <br> -To win the game, the exact order of the cards must be correct <br> Beginner - 5 cards <br> Advanced - 7 cards <br> Expert - 10 cards';
+
         document.body.appendChild(diffContainer);
         document.body.appendChild(playBtn);
-        loginContainer.innerHTML = '';
-        document.body.removeChild(loginContainer);
-        document.body.removeChild(registrationContainer);
-        document.body.removeChild(errorContainer);
+        // loginContainer.innerHTML = '';
+        loginContainer.remove()
+        registrationContainer.remove()
+        errorContainer.remove()
+      
       }
     })
       .catch((error) => {
@@ -400,13 +414,13 @@ playBtn.addEventListener('click', () => {
 
 submitAnsBtn.addEventListener('click', () => {
   let cardDifference = displayedCards.length - selectedCards.length;
-  if(displayedCards.length > selectedCards.length){ 
+
+  if(displayedCards.length > selectedCards.length || selectedCards.length === 0){ 
     alert(`Number of selected cards is lesser that those displayed. Pls select ${cardDifference} more cards!`)
   } else {
   allCards.innerHTML = ""
   flashedCards.innerHTML = ""
   cardSelectionContainer.removeChild(allCardsContainer);
-  let playerWon = false;
   let count = 0;
   
   // check for win conditions
@@ -417,7 +431,6 @@ submitAnsBtn.addEventListener('click', () => {
       }
   }
   if(count === displayedCards.length){
-      playerWon = true
       resultOutcome.innerText = 'You won'
       console.log('you won')
       document.body.removeChild(submitAnsBtn);

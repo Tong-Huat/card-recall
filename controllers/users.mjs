@@ -1,9 +1,9 @@
 import { getHash } from '../utility.mjs';
 
 export default function initUsersController(db) {
-  const home = async (request, response) => {
-    response.render('games/index');
-  };
+  // const home = async (request, response) => {
+  //   response.render('games/index');
+  // };
 
   const login = async (request, response) => {
     const loginData = request.body;
@@ -60,7 +60,27 @@ export default function initUsersController(db) {
       response.send({ error: error.message });
     }
   };
+
+  const dashboard = async (request, response) => {
+    console.log('userid', request.cookies.userId);
+
+    try {
+      const user = await db.User.findOne({
+        where: {
+          id: request.cookies.userId,
+        },
+      });
+      console.log('user', user);
+      response.send({ user });
+    }
+    catch (error) {
+      console.log(error);
+    }
+  };
+
+
   return {
-    home, login, register,
+    // home,
+     login, register, dashboard,
   };
 }
