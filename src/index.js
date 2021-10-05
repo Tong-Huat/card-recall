@@ -274,17 +274,13 @@ card9.addEventListener('click', cardSelected)
 
 // selected cards to be appended to solution array and disappear
 const cardSelected = (e) => {
-   if (e.target.nodeName === "DIV"){
-    document.getElementById(e.target.id).remove()
-    // ansContainer.appendChild(e.target)
-    // document.body.appendChild(ansContainer)
-    const displayName = e.target.firstChild.innerText;
-    const cardSuitSymbol = e.target.lastChild.innerText;
-    console.log(e.target.firstChild.innerText)
-    console.log(e.target.lastChild.innerText)
+    document.getElementById(e.currentTarget.id).remove()
+    const displayName = e.currentTarget.firstChild.innerText;
+    const cardSuitSymbol = e.currentTarget.lastChild.innerText;
+    console.log(e.currentTarget.firstChild.innerText)
+    console.log(e.currentTarget.lastChild.innerText)
     selectedCards.push({displayName, suitSymbol: cardSuitSymbol })
     console.log('selectedCards :>> ', selectedCards);
-  }
 }
 
 const displayFinalResults = () => {

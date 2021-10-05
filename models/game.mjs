@@ -9,12 +9,20 @@ export default function gameModel(sequelize, DataTypes) {
     gameState: {
       type: DataTypes.JSON,
     },
-    created_by: {
+    createdBy: {
       type: DataTypes.INTEGER,
       references: {
         model: 'users',
         key: 'id',
         },
+      },
+    isCompleted: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN
+      },
+    isWon: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN
       },
     createdAt: {
       allowNull: false,

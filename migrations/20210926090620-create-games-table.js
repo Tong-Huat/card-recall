@@ -42,6 +42,14 @@ module.exports = {
           key: 'id',
         },
       },
+      is_completed: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
+      },
+      is_won: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -53,41 +61,41 @@ module.exports = {
     });
 
     // TODO: need to del this joint table and fix bug like Justin's 
-    await queryInterface.createTable('game_winners', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      game_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'games',
-          key: 'id',
-        },
-      },
-      winner: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'users',
-          key: 'id',
-        },
-      },
-      created_at: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updated_at: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-    });
+    // await queryInterface.createTable('game_winners', {
+    //   id: {
+    //     allowNull: false,
+    //     autoIncrement: true,
+    //     primaryKey: true,
+    //     type: Sequelize.INTEGER,
+    //   },
+    //   game_id: {
+    //     type: Sequelize.INTEGER,
+    //     references: {
+    //       model: 'games',
+    //       key: 'id',
+    //     },
+    //   },
+    //   winner: {
+    //     type: Sequelize.INTEGER,
+    //     references: {
+    //       model: 'users',
+    //       key: 'id',
+    //     },
+    //   },
+    //   created_at: {
+    //     allowNull: false,
+    //     type: Sequelize.DATE,
+    //   },
+    //   updated_at: {
+    //     allowNull: false,
+    //     type: Sequelize.DATE,
+    //   },
+    // });
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('game_winners');
-    await queryInterface.dropTable('users');
+    // await queryInterface.dropTable('game_winners');
     await queryInterface.dropTable('games');
+    await queryInterface.dropTable('users');
   },
 };

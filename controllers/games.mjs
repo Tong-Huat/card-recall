@@ -131,7 +131,9 @@ export default function initGamesController(db) {
       gameState: {
         flashCards,
       },
-      created_by: request.cookies.userId,
+      createdBy: request.cookies.userId,
+      isCompleted: false,
+      isWon: false,
     };
 
     try {
@@ -148,6 +150,7 @@ export default function initGamesController(db) {
      
     } catch (error) {
       response.status(500).send(error);
+      console.log('error :>> ', error);
     }
   };
 
